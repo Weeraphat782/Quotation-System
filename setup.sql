@@ -2,7 +2,7 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- 1. Employees Table
-CREATE TABLE employees (
+CREATE TABLE IF NOT EXISTS employees (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     username TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE employees (
 );
 
 -- 2. Companies Table (Master)
-CREATE TABLE companies (
+CREATE TABLE IF NOT EXISTS companies (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name_th TEXT NOT NULL,
     name_en TEXT NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE companies (
 );
 
 -- 3. Customers Table (Master)
-CREATE TABLE customers (
+CREATE TABLE IF NOT EXISTS customers (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name TEXT NOT NULL,
     address TEXT NOT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE customers (
 );
 
 -- 4. Opportunities Table
-CREATE TABLE opportunities (
+CREATE TABLE IF NOT EXISTS opportunities (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     title TEXT NOT NULL,
     customer_id UUID REFERENCES customers(id) ON DELETE CASCADE,
@@ -56,7 +56,7 @@ CREATE TABLE opportunities (
 );
 
 -- 5. Quotations Table
-CREATE TABLE quotations (
+CREATE TABLE IF NOT EXISTS quotations (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     quotation_number TEXT UNIQUE NOT NULL,
     company_id UUID REFERENCES companies(id) ON DELETE CASCADE,
@@ -67,12 +67,16 @@ CREATE TABLE quotations (
     grand_total NUMERIC(15, 2) NOT NULL DEFAULT 0,
     revision INTEGER DEFAULT 1,
     status TEXT CHECK (status IN ('draft', 'sent', 'accepted', 'rejected')) DEFAULT 'draft',
+    remarks TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     created_by UUID REFERENCES employees(id)
 );
 
+-- Add remarks column if it doesn't exist (for existing databases)
+ALTER TABLE quotations ADD COLUMN IF NOT EXISTS remarks TEXT;
+
 -- 6. Quotation Items Table
-CREATE TABLE quotation_items (
+CREATE TABLE IF NOT EXISTS quotation_items (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     quotation_id UUID REFERENCES quotations(id) ON DELETE CASCADE,
     description TEXT NOT NULL,

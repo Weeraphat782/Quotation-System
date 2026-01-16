@@ -241,91 +241,96 @@ export default function OpportunityBoard() {
                       key={op.id}
                       draggable
                       onDragStart={(e) => handleDragStart(e, op.id)}
-                      className="bg-card rounded-lg border p-3 cursor-move hover:shadow-md transition-shadow"
+                      className="bg-card rounded-lg border p-3 cursor-move hover:shadow-md transition-shadow relative"
+                      onClick={() => router.push(`/opportunity/${op.id}`)}
                     >
-                      <div className="flex items-start justify-between">
-                        <h4 className="font-medium text-sm">{op.title}</h4>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-6 w-6">
-                              <MoreHorizontal className="w-4 h-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => openQuotationDialog(op)}>
-                              <FileText className="w-4 h-4 mr-2" />
-                              สร้าง Quotation
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleEdit(op)}>
-                              <Pencil className="w-4 h-4 mr-2" />
-                              แก้ไข
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleDelete(op.id)} className="text-destructive">
-                              <Trash2 className="w-4 h-4 mr-2" />
-                              ลบ
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-1">{customer?.name || "ไม่ระบุลูกค้า"}</p>
-                      {op.notes && <p className="text-xs text-muted-foreground mt-2 line-clamp-2">{op.notes}</p>}
+                      <div className="cursor-pointer">
+                        <div className="flex items-start justify-between">
+                          <h4 className="font-medium text-sm">{op.title}</h4>
+                          <div onClick={(e) => e.stopPropagation()}>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon" className="h-6 w-6">
+                                  <MoreHorizontal className="w-4 h-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => openQuotationDialog(op)}>
+                                  <FileText className="w-4 h-4 mr-2" />
+                                  สร้าง Quotation
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleEdit(op)}>
+                                  <Pencil className="w-4 h-4 mr-2" />
+                                  แก้ไข
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleDelete(op.id)} className="text-destructive">
+                                  <Trash2 className="w-4 h-4 mr-2" />
+                                  ลบ
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-1">{customer?.name || "ไม่ระบุลูกค้า"}</p>
+                        {op.notes && <p className="text-xs text-muted-foreground mt-2 line-clamp-2">{op.notes}</p>}
 
-                      {/* Quotations list */}
-                      {opQuotations.length > 0 && (
-                        <div className="mt-3 pt-3 border-t space-y-1">
-                          <p className="text-xs font-medium text-muted-foreground">
-                            Quotations ({opQuotations.length})
-                          </p>
-                          {opQuotations.map((q) => (
-                            <div
-                              key={q.id}
-                              className="flex items-center justify-between text-xs bg-muted rounded px-2 py-1"
-                            >
-                              <span>{q.quotation_number}</span>
-                              <div className="flex items-center gap-1">
-                                <span
-                                  className={`px-1.5 py-0.5 rounded text-[10px] ${q.status === "accepted"
-                                    ? "bg-kanban-won text-foreground"
-                                    : q.status === "rejected"
-                                      ? "bg-kanban-lost text-foreground"
-                                      : q.status === "sent"
-                                        ? "bg-kanban-proposal text-foreground"
-                                        : "bg-muted-foreground/20"
-                                    }`}
-                                >
-                                  {q.status}
-                                </span>
+                        {/* Quotations list */}
+                        {opQuotations.length > 0 && (
+                          <div className="mt-3 pt-3 border-t space-y-1">
+                            <p className="text-xs font-medium text-muted-foreground">
+                              Quotations ({opQuotations.length})
+                            </p>
+                            {opQuotations.map((q) => (
+                              <div
+                                key={q.id}
+                                className="flex items-center justify-between text-xs bg-muted rounded px-2 py-1"
+                              >
+                                <span>{q.quotation_number}</span>
                                 <div className="flex items-center gap-1">
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-5 w-5 text-blue-600"
-                                    onClick={() => setEditingQuotation(q)}
+                                  <span
+                                    className={`px-1.5 py-0.5 rounded text-[10px] ${q.status === "accepted"
+                                      ? "bg-kanban-won text-foreground"
+                                      : q.status === "rejected"
+                                        ? "bg-kanban-lost text-foreground"
+                                        : q.status === "sent"
+                                          ? "bg-kanban-proposal text-foreground"
+                                          : "bg-muted-foreground/20"
+                                      }`}
                                   >
-                                    <Edit2 className="w-3 h-3" />
-                                  </Button>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-5 w-5 text-destructive"
-                                    onClick={() => handleDeleteQuotation(q.id)}
-                                  >
-                                    <Trash2 className="w-3 h-3" />
-                                  </Button>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-5 w-5"
-                                    onClick={() => router.push(`/quotation/${q.id}`)}
-                                  >
-                                    <Eye className="w-3 h-3" />
-                                  </Button>
+                                    {q.status}
+                                  </span>
+                                  <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-5 w-5 text-blue-600"
+                                      onClick={() => setEditingQuotation(q)}
+                                    >
+                                      <Edit2 className="w-3 h-3" />
+                                    </Button>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-5 w-5 text-destructive"
+                                      onClick={() => handleDeleteQuotation(q.id)}
+                                    >
+                                      <Trash2 className="w-3 h-3" />
+                                    </Button>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-5 w-5"
+                                      onClick={() => router.push(`/quotation/${q.id}`)}
+                                    >
+                                      <Eye className="w-3 h-3" />
+                                    </Button>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   )
                 })}
@@ -337,7 +342,7 @@ export default function OpportunityBoard() {
       {/* Quotation Dialog */}
       {selectedOpportunity && (
         <Dialog open={quotationDialogOpen} onOpenChange={setQuotationDialogOpen}>
-          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>สร้าง Quotation - {selectedOpportunity.title}</DialogTitle>
             </DialogHeader>
@@ -349,7 +354,7 @@ export default function OpportunityBoard() {
       {/* Edit Quotation Dialog */}
       {editingQuotation && (
         <Dialog open={!!editingQuotation} onOpenChange={(open) => !open && setEditingQuotation(null)}>
-          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>แก้ไข Quotation - {editingQuotation.quotation_number}</DialogTitle>
             </DialogHeader>

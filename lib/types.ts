@@ -58,6 +58,7 @@ export interface Quotation {
   grand_total: number
   revision: number
   status: "draft" | "sent" | "accepted" | "rejected"
+  remarks?: string
   created_at: string | Date
   created_by: string
 }

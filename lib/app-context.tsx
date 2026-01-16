@@ -209,27 +209,62 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const quotation_number = await generateQuotationNumber()
     const { items, ...quotationData } = quotation
 
+    console.log("Adding quotation data:", { ...quotationData, quotation_number })
     const { data: newQuotation, error } = await supabase
       .from("quotations")
       .insert([{ ...quotationData, quotation_number }])
       .select()
       .single()
 
-    if (newQuotation && !error && items) {
+    if (error) {
+      console.error("Error adding quotation:", error.message, error.details, error.hint)
+      return
+    }
+
+    if (newQuotation && items) {
       const itemsToInsert = items.map(item => ({
         quotation_id: newQuotation.id,
         description: item.description,
         price: item.price
       }))
-      await supabase.from("quotation_items").insert(itemsToInsert)
+      const { error: itemsError } = await supabase.from("quotation_items").insert(itemsToInsert)
+      if (itemsError) console.error("Error inserting quotation items:", itemsError)
     }
 
-    if (!error) await fetchData()
+    await fetchData()
   }
 
   const updateQuotation = async (id: string, quotation: Partial<Quotation>) => {
-    const { error } = await supabase.from("quotations").update(quotation).eq("id", id)
-    if (!error) await fetchData()
+    const { items, ...quotationData } = quotation
+
+    // Update main quotation data
+    console.log("Updating quotation data:", quotationData)
+    const { error } = await supabase
+      .from("quotations")
+      .update(quotationData)
+      .eq("id", id)
+
+    if (error) {
+      console.error("Error updating quotation:", error.message, error.details, error.hint)
+      return
+    }
+
+    // Update items if provided
+    if (items) {
+      // For simplicity in this prototype, we'll delete and re-insert
+      await supabase.from("quotation_items").delete().eq("quotation_id", id)
+
+      const itemsToInsert = items.map(item => ({
+        quotation_id: id,
+        description: item.description,
+        price: item.price
+      }))
+
+      const { error: itemsError } = await supabase.from("quotation_items").insert(itemsToInsert)
+      if (itemsError) console.error("Error updating quotation items:", itemsError)
+    }
+
+    await fetchData()
   }
 
   const deleteQuotation = async (id: string) => {

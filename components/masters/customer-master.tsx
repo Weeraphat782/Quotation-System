@@ -12,9 +12,11 @@ import { Textarea } from "@/components/ui/textarea"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Plus, Pencil, Trash2 } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export default function CustomerMaster() {
   const { customers, addCustomer, updateCustomer, deleteCustomer } = useApp()
+  const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
   const [editingCustomer, setEditingCustomer] = useState<Customer | null>(null)
   const [formData, setFormData] = useState({
@@ -168,8 +170,8 @@ export default function CustomerMaster() {
           </TableHeader>
           <TableBody>
             {customers.map((customer) => (
-              <TableRow key={customer.id}>
-                <TableCell className="font-medium">{customer.name}</TableCell>
+              <TableRow key={customer.id} className="hover:bg-muted/50 cursor-pointer" onClick={() => router.push(`/customer/${customer.id}`)}>
+                <TableCell className="font-medium text-primary hover:underline">{customer.name}</TableCell>
                 <TableCell className="max-w-[200px] truncate">{customer.address}</TableCell>
                 <TableCell>{customer.tax_id}</TableCell>
                 <TableCell>{customer.contact_person || "-"}</TableCell>

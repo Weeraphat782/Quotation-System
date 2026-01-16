@@ -8,6 +8,7 @@ import type { Opportunity, QuotationItem, Quotation } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
 import { Plus, Trash2 } from "lucide-react"
 
 interface QuotationFormProps {
@@ -28,6 +29,7 @@ export default function QuotationForm({ opportunity, quotation, onClose }: Quota
     quotation?.items?.map(item => ({ ...item })) ||
     [{ id: "1", description: "", price: 0 }]
   )
+  const [remarks, setRemarks] = useState(quotation?.remarks || "")
 
   const addItem = () => {
     setItems([...items, { id: Math.random().toString(36).substr(2, 9), description: "", price: 0 }])
@@ -59,6 +61,7 @@ export default function QuotationForm({ opportunity, quotation, onClose }: Quota
         sub_total,
         vat,
         grand_total,
+        remarks,
       })
     } else {
       // Create mode
@@ -70,6 +73,7 @@ export default function QuotationForm({ opportunity, quotation, onClose }: Quota
         sub_total,
         vat,
         grand_total,
+        remarks,
         revision,
         status: "draft",
         created_by: currentUser?.id || "",
@@ -105,15 +109,17 @@ export default function QuotationForm({ opportunity, quotation, onClose }: Quota
 
         <div className="space-y-3">
           {items.map((item, index) => (
-            <div key={item.id} className="flex gap-3 items-start">
+            <div key={item.id} className="flex gap-3 items-start border-b pb-4 sm:pb-3 last:border-0 last:pb-0">
               <div className="flex-1">
-                <Input
+                <Textarea
                   placeholder={`รายการที่ ${index + 1}`}
                   value={item.description}
                   onChange={(e) => updateItem(item.id, "description", e.target.value)}
+                  rows={2}
+                  className="resize-none"
                 />
               </div>
-              <div className="w-40">
+              <div className="w-32">
                 <Input
                   type="number"
                   placeholder="ราคา"
@@ -133,6 +139,18 @@ export default function QuotationForm({ opportunity, quotation, onClose }: Quota
             </div>
           ))}
         </div>
+      </div>
+
+      <div>
+        <Label htmlFor="remarks">Remark (หมายเหตุ)</Label>
+        <Textarea
+          id="remarks"
+          placeholder="เพิ่มหมายเหตุ (จะแสดงใต้รายการบริการ)..."
+          value={remarks}
+          onChange={(e) => setRemarks(e.target.value)}
+          className="mt-2"
+          rows={3}
+        />
       </div>
 
       {/* Summary */}

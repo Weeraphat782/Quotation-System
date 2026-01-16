@@ -158,7 +158,15 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
             </table>
           </div>
 
-          <div className="flex justify-end mb-8">
+          <div className="flex justify-between items-start mb-8 gap-8">
+            <div className="flex-1 text-base">
+              {quotation.remarks && (
+                <div className="px-2">
+                  <p className="font-bold underline mb-1 italic">Remark:</p>
+                  <p className="whitespace-pre-line leading-relaxed text-gray-700">{quotation.remarks}</p>
+                </div>
+              )}
+            </div>
             <div className="w-96 text-base">
               <div className="flex justify-between py-1 px-2 border-t border-gray-100">
                 <span>Sub Total</span>
