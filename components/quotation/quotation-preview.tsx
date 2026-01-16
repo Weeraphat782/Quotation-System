@@ -94,17 +94,18 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
           className="bg-white text-black shadow-xl mx-auto w-[210mm] min-h-[297mm] flex flex-col print:shadow-none print:w-full"
           style={{
             fontFamily: "'Times New Roman', serif",
-            padding: '15mm 20mm', // Slightly reduced top/bottom padding to fit larger font
+            fontSize: '12pt',
+            padding: '15mm 20mm',
             boxSizing: 'border-box'
           }}
         >
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl text-amber-800 font-bold mb-1">{company.name_th}</h1>
-            <h2 className="text-3xl text-amber-800 font-bold italic">{company.name_en}</h2>
+            <h1 className="text-amber-800 font-bold mb-1" style={{ fontSize: '24pt' }}>{company.name_th}</h1>
+            <h2 className="text-amber-800 font-bold italic" style={{ fontSize: '24pt' }}>{company.name_en}</h2>
           </div>
 
-          <div className="flex justify-between items-start mb-6 text-base">
+          <div className="flex justify-between items-start mb-6">
             <div className="flex">
               <span className="font-bold w-14">No.</span>
               <span>{quotation.quotation_number}</span>
@@ -115,9 +116,9 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
             </div>
           </div>
 
-          <h3 className="text-center text-2xl font-bold underline mb-6">QUOTATION</h3>
+          <h3 className="text-center font-bold underline mb-6" style={{ fontSize: '18pt' }}>QUOTATION</h3>
 
-          <div className="mb-6 text-base grid grid-cols-12 gap-2">
+          <div className="mb-6 grid grid-cols-12 gap-2">
             <div className="col-span-2 font-bold italic">Company:</div>
             <div className="col-span-10">
               <p className="font-bold">{customer.name}</p>
@@ -128,12 +129,12 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
             </div>
           </div>
 
-          <p className="mb-4 text-base italic">
+          <p className="mb-4 italic">
             {companyShortName} is pleased to submit the following quotation for your consideration:
           </p>
 
           <div className="flex-grow">
-            <table className="w-full mb-6 text-base">
+            <table className="w-full mb-6" style={{ fontSize: '12pt' }}>
               <thead>
                 <tr className="border-y-2 border-black">
                   <th className="text-left py-2 px-2">Service Description</th>
@@ -159,7 +160,7 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
           </div>
 
           <div className="flex justify-between items-start mb-8 gap-8">
-            <div className="flex-1 text-base">
+            <div className="flex-1">
               {quotation.remarks && (
                 <div className="px-2">
                   <p className="font-bold underline mb-1 italic">Remark:</p>
@@ -167,7 +168,7 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
                 </div>
               )}
             </div>
-            <div className="w-96 text-base">
+            <div className="w-96">
               <div className="flex justify-between py-1 px-2 border-t border-gray-100">
                 <span>Sub Total</span>
                 <span className="font-mono">{quotation.sub_total.toLocaleString("en-US", { minimumFractionDigits: 2 })}</span>
@@ -183,8 +184,8 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
             </div>
           </div>
 
-          <div className="mb-8 text-base border border-gray-200 p-4 rounded-sm bg-gray-50/50">
-            <p className="font-bold underline mb-2 text-base">Other Terms and Conditions:</p>
+          <div className="mb-8 border border-gray-200 p-4 rounded-sm bg-gray-50/50">
+            <p className="font-bold underline mb-2">Other Terms and Conditions:</p>
             <ol className="space-y-1.5 ml-1">
               <li className="flex gap-2">
                 <span className="font-bold min-w-[150px]">1. Validity of Offer :</span>
