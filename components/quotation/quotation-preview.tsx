@@ -91,10 +91,8 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
       <div className="py-8 px-4 bg-slate-100 min-h-screen flex justify-center print:p-0 print:bg-white">
         {/* Document - A4 sized container */}
         <div
-          className="bg-white text-black shadow-xl mx-auto w-[210mm] min-h-[297mm] flex flex-col print:shadow-none print:w-full"
+          className="quotation-document bg-white text-black shadow-xl mx-auto w-[210mm] min-h-[297mm] flex flex-col print:shadow-none print:w-full"
           style={{
-            fontFamily: "'Times New Roman', serif",
-            fontSize: '12pt',
             padding: '15mm 20mm',
             boxSizing: 'border-box'
           }}

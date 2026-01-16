@@ -119,7 +119,22 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Quotation Document Styling */
+.quotation-document {
+  font-family: "Times New Roman", Times, serif !important;
+  font-size: 12pt !important;
+}
+
+.quotation-document * {
+  font-family: inherit !important;
+}
+
+.quotation-document .font-mono {
+  font-family: "Times New Roman", Times, serif !important;
 }
