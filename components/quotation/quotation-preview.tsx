@@ -223,7 +223,7 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
             </div>
           </div>
 
-          <div className="mt-8 pt-4 border-t border-gray-100 text-center text-[10px] text-gray-400">
+          <div className="mt-8 pt-4 border-t border-gray-100 text-center text-[10px] text-black">
             <p className="uppercase tracking-widest">{company.name_en}</p>
             <p className="mt-0.5">{company.address}</p>
             <p className="mt-0.5 font-mono text-[9px]">Tel: {company.phone} | Email: {company.email}</p>
