@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
+import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react"
 import type { Company, Customer, Employee, Opportunity, Quotation } from "./types"
 import { supabase } from "./supabase"
 
@@ -55,7 +55,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     loading: true,
   })
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setState((prev) => ({ ...prev, loading: true }))
     try {
       const { data: employees } = await supabase.from("employees").select("*")
@@ -77,7 +77,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       console.error("Error fetching data:", error)
       setState((prev) => ({ ...prev, loading: false }))
     }
-  }
+  }, [])
 
   useEffect(() => {
     // Check for saved user session

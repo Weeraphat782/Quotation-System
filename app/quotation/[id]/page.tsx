@@ -42,7 +42,7 @@ export default function QuotationPage() {
         }
 
         loadQuotation()
-    }, [id, fetchData])
+    }, [id])
 
     if (loading) {
         return (
