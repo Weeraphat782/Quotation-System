@@ -25,7 +25,10 @@ export default function QuotationPage() {
                     .eq("id", id)
                     .single()
 
-                if (qError) throw qError
+                if (qError) {
+                    console.error("Supabase Error:", qError)
+                    throw qError
+                }
 
                 setQuotation(qData)
 

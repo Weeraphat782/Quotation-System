@@ -34,8 +34,8 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
     return <div className="p-8">ไม่พบข้อมูล</div>
   }
 
-  // Get company short name (first word of English name for the "is pleased..." line)
-  const companyShortName = company.name_en.split(" ")[0]
+  // Get company short name (use full English name as requested)
+  const companyShortName = company.name_en
 
   return (
     <div className="bg-card min-h-screen">
@@ -207,7 +207,7 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
             </ol>
           </div>
 
-          <div className="flex justify-between items-end mt-8 text-base">
+          <div className="flex justify-between items-start mt-8 text-base">
             <div className="text-center w-72">
               <p className="mb-14">Yours sincerely,</p>
               <div className="border-b border-black w-full mb-1"></div>
@@ -216,7 +216,7 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
               <p className="font-bold mt-2 text-base">{company.managing_director}</p>
             </div>
             <div className="text-center w-72">
-              <p className="mb-14 text-gray-400 font-light">Quotation Accepted By:</p>
+              <p className="mb-14">Quotation Accepted By:</p>
               <div className="border-b border-black w-full mb-1"></div>
               <p className="font-bold uppercase text-[12px]">{customer.name}</p>
               <p className="italic text-[12px] mt-1">Authorized Signature / Date</p>
