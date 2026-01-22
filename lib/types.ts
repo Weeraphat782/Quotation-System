@@ -24,7 +24,8 @@ export interface Company {
   bank_account_number: string
   boi_exempt: boolean // BOI tax exemption
   managing_director: string
-  signature_url?: string
+  signature_name?: string
+  logo_url?: string
   created_at: string | Date
 }
 

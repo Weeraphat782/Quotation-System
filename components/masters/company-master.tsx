@@ -11,7 +11,8 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Plus, Pencil, Trash2, Building2, Check } from "lucide-react"
+import { Plus, Pencil, Trash2, Building2, Check, Upload, Loader2 } from "lucide-react"
+import { supabase } from "@/lib/supabase"
 
 export default function CompanyMaster() {
   const { companies, addCompany, updateCompany, deleteCompany } = useApp()
@@ -30,7 +31,11 @@ export default function CompanyMaster() {
     bank_account_number: "",
     boi_exempt: false,
     managing_director: "",
+    logo_url: "",
+    signature_name: "",
   })
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [isUploading, setIsUploading] = useState(false)
 
   const resetForm = () => {
     setFormData({
@@ -46,19 +51,62 @@ export default function CompanyMaster() {
       bank_account_number: "",
       boi_exempt: false,
       managing_director: "",
+      logo_url: "",
+      signature_name: "",
     })
     setEditingCompany(null)
+    setSelectedFile(null)
+  }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0]
+      console.log("File selected:", file.name)
+      setSelectedFile(file)
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (editingCompany) {
-      await updateCompany(editingCompany.id, formData)
-    } else {
-      await addCompany(formData)
+    setIsUploading(true)
+
+    try {
+      let currentLogoUrl = formData.logo_url
+
+      if (selectedFile) {
+        const fileExt = selectedFile.name.split('.').pop()
+        const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`
+        const filePath = `${fileName}`
+
+        const { error: uploadError } = await supabase.storage
+          .from('logos')
+          .upload(filePath, selectedFile)
+
+        if (uploadError) {
+          throw new Error('Error uploading logo: ' + uploadError.message)
+        }
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('logos')
+          .getPublicUrl(filePath)
+
+        currentLogoUrl = publicUrl
+      }
+
+      const finalData = { ...formData, logo_url: currentLogoUrl }
+
+      if (editingCompany) {
+        await updateCompany(editingCompany.id, finalData)
+      } else {
+        await addCompany(finalData)
+      }
+      setIsOpen(false)
+      resetForm()
+    } catch (error: any) {
+      alert(error.message)
+    } finally {
+      setIsUploading(false)
     }
-    setIsOpen(false)
-    resetForm()
   }
 
   const handleEdit = (company: Company) => {
@@ -76,6 +124,8 @@ export default function CompanyMaster() {
       bank_account_number: company.bank_account_number,
       boi_exempt: company.boi_exempt,
       managing_director: company.managing_director,
+      logo_url: company.logo_url || "",
+      signature_name: company.signature_name || "",
     })
     setIsOpen(true)
   }
@@ -182,6 +232,45 @@ export default function CompanyMaster() {
                 </div>
               </div>
 
+              <div className="space-y-2">
+                <Label htmlFor="logo">โลโก้บริษัท</Label>
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 border rounded-lg flex items-center justify-center bg-muted overflow-hidden">
+                    {selectedFile ? (
+                      <img src={URL.createObjectURL(selectedFile)} alt="Preview" className="w-full h-full object-contain" />
+                    ) : formData.logo_url ? (
+                      <img src={formData.logo_url} alt="Logo" className="w-full h-full object-contain" />
+                    ) : (
+                      <Building2 className="w-8 h-8 text-muted-foreground" />
+                    )}
+                  </div>
+                  <div className="flex-grow">
+                    <Input
+                      id="logo"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileChange}
+                      className="cursor-pointer"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      แนะนำไฟล์ PNG หรือ JPG ขนาดไม่เกิน 2MB
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="signature_name">ชื่อลายเซ็น (Signature Name)</Label>
+                <Input
+                  id="signature_name"
+                  placeholder="เช่น Mr. Somchai S."
+                  value={formData.signature_name}
+                  onChange={(e) => setFormData({ ...formData, signature_name: e.target.value })}
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  ชื่อที่จะปรากฏในช่องลายเซ็น (จะแสดงเป็นฟอนต์ตัวเขียน)
+                </p>
+              </div>
+
               <div className="border-t pt-4">
                 <h4 className="font-medium mb-3">ข้อมูลธนาคาร</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -235,7 +324,10 @@ export default function CompanyMaster() {
                 <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
                   ยกเลิก
                 </Button>
-                <Button type="submit">{editingCompany ? "บันทึก" : "เพิ่ม"}</Button>
+                <Button type="submit" disabled={isUploading}>
+                  {isUploading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                  {editingCompany ? "บันทึก" : "เพิ่ม"}
+                </Button>
               </div>
             </form>
           </DialogContent>
@@ -247,8 +339,12 @@ export default function CompanyMaster() {
           <div key={company.id} className="bg-card rounded-lg border p-6">
             <div className="flex items-start justify-between">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                  <Building2 className="w-6 h-6 text-primary" />
+                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center overflow-hidden">
+                  {company.logo_url ? (
+                    <img src={company.logo_url} alt="Logo" className="w-full h-full object-contain" />
+                  ) : (
+                    <Building2 className="w-6 h-6 text-primary" />
+                  )}
                 </div>
                 <div>
                   <h3 className="font-semibold">{company.name_th}</h3>

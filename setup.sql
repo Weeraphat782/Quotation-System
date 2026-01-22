@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS companies (
     boi_exempt BOOLEAN DEFAULT FALSE,
     managing_director TEXT,
     signature_url TEXT,
+    logo_url TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 

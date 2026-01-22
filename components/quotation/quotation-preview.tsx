@@ -93,14 +93,35 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
         <div
           className="quotation-document bg-white text-black shadow-xl mx-auto w-[210mm] min-h-[297mm] flex flex-col print:shadow-none print:w-full"
           style={{
-            padding: '15mm 20mm',
+            padding: '8mm 20mm 15mm',
             boxSizing: 'border-box'
           }}
         >
           {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-amber-800 font-bold mb-1" style={{ fontSize: '24pt' }}>{company.name_th}</h1>
-            <h2 className="text-amber-800 font-bold italic" style={{ fontSize: '24pt' }}>{company.name_en}</h2>
+          <div className="relative mb-10 min-h-[100px]">
+            {/* Logo in top right - moved further towards paper edge */}
+            {company.logo_url && (
+              <div className="absolute top-0 right-[-14mm] w-28 h-28 flex justify-end items-start pointer-events-none">
+                <img
+                  src={company.logo_url}
+                  alt="Company Logo"
+                  className="max-w-full max-h-full object-contain"
+                  style={{ display: 'block' }}
+                  onError={(e) => {
+                    console.error("QuotationPreview: Failed to load logo", company.logo_url);
+                  }}
+                />
+              </div>
+            )}
+
+            <div className="text-center w-full px-4">
+              <h1 className="text-black font-bold italic mb-1 whitespace-nowrap" style={{ fontSize: '22pt' }}>
+                {company.name_th}
+              </h1>
+              <h2 className="text-red-600 font-bold italic whitespace-nowrap" style={{ fontSize: '24pt' }}>
+                {company.name_en}
+              </h2>
+            </div>
           </div>
 
           <div className="flex justify-between items-start mb-6">
@@ -110,11 +131,11 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
             </div>
             <div className="text-right">
               <span className="font-bold">Date: </span>
-              <span>{formatDate(quotation.created_at)}</span>
+              <span style={{ fontSize: '14pt' }}>{formatDate(quotation.created_at)}</span>
             </div>
           </div>
 
-          <h3 className="text-center font-bold underline mb-6" style={{ fontSize: '18pt' }}>QUOTATION</h3>
+          <h3 className="text-center font-bold underline mb-6" style={{ fontSize: '16pt' }}>QUOTATION</h3>
 
           <div className="mb-6 grid grid-cols-12 gap-2">
             <div className="col-span-2 font-bold italic">Company:</div>
@@ -127,12 +148,12 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
             </div>
           </div>
 
-          <p className="mb-4 italic">
+          <p className="mb-4">
             {companyShortName} is pleased to submit the following quotation for your consideration:
           </p>
 
           <div className="flex-grow">
-            <table className="w-full mb-6" style={{ fontSize: '12pt' }}>
+            <table className="w-full mb-6" style={{ fontSize: '13pt' }}>
               <thead>
                 <tr className="border-y-2 border-black">
                   <th className="text-left py-2 px-2">Service Description</th>
@@ -192,9 +213,9 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
               <li className="flex gap-2 items-start">
                 <span className="font-bold min-w-[150px]">2. Payment Method :</span>
                 <div>
-                  <p className="font-bold text-amber-900">{company.bank_account_name}</p>
+                  <p className="text-black">{company.bank_account_name}</p>
                   <p className="text-sm">{company.bank_name} - {company.bank_branch}</p>
-                  <p className="font-mono font-bold tracking-wider mt-0.5 underline decoration-dotted">
+                  <p className="font-mono font-bold tracking-wider mt-0.5">
                     A/C No: {company.bank_account_number}
                   </p>
                 </div>
@@ -208,23 +229,36 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
           </div>
 
           <div className="flex justify-between items-start mt-8 text-base">
-            <div className="text-center w-72">
-              <p className="mb-14">Yours sincerely,</p>
+            <div className="text-center w-72 relative">
+              <p className="mb-2">Yours sincerely,</p>
+              <div className="h-10 flex items-center justify-center">
+                {company.signature_name && (
+                  <span
+                    className="text-3xl italic text-blue-900 opacity-80"
+                    style={{
+                      fontFamily: "'Freestyle Script', 'Brush Script MT', 'Palace Script MT', cursive",
+                      transform: "rotate(-2deg)",
+                    }}
+                  >
+                    {company.signature_name}
+                  </span>
+                )}
+              </div>
               <div className="border-b border-black w-full mb-1"></div>
               <p className="font-bold uppercase text-[12px]">{company.name_en}</p>
               <p className="italic text-[12px] mt-1">Authorized Signature</p>
               <p className="font-bold mt-2 text-base">{company.managing_director}</p>
             </div>
             <div className="text-center w-72">
-              <p className="mb-14">Quotation Accepted By:</p>
+              <p className="mb-2">Quotation Accepted By:</p>
+              <div className="h-10"></div> {/* Space for signature to match company side */}
               <div className="border-b border-black w-full mb-1"></div>
               <p className="font-bold uppercase text-[12px]">{customer.name}</p>
               <p className="italic text-[12px] mt-1">Authorized Signature / Date</p>
             </div>
           </div>
 
-          <div className="mt-8 pt-4 border-t border-gray-100 text-center text-[10px] text-black">
-            <p className="uppercase tracking-widest">{company.name_en}</p>
+          <div className="mt-auto pt-4 border-t border-gray-100 text-center text-[10px] text-black">
             <p className="mt-0.5">{company.address}</p>
             <p className="mt-0.5 font-mono text-[9px]">Tel: {company.phone} | Email: {company.email}</p>
           </div>
