@@ -192,10 +192,12 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
                 <span>Sub Total</span>
                 <span className="font-mono">{quotation.sub_total.toLocaleString("en-US", { minimumFractionDigits: 2 })}</span>
               </div>
-              <div className="flex justify-between py-1 px-2">
-                <span>Value Added Tax 7%</span>
-                <span className="font-mono">{quotation.vat.toLocaleString("en-US", { minimumFractionDigits: 2 })}</span>
-              </div>
+              {quotation.include_vat !== false && (
+                <div className="flex justify-between py-1 px-2">
+                  <span>Value Added Tax 7%</span>
+                  <span className="font-mono">{quotation.vat.toLocaleString("en-US", { minimumFractionDigits: 2 })}</span>
+                </div>
+              )}
               <div className="flex justify-between py-2 px-2 font-bold border-t-2 border-black mt-1">
                 <span>Grand Total</span>
                 <span className="font-mono">{quotation.grand_total.toLocaleString("en-US", { minimumFractionDigits: 2 })}</span>

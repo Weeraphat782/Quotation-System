@@ -30,6 +30,7 @@ export default function QuotationForm({ opportunity, quotation, onClose }: Quota
     [{ id: "1", description: "", price: 0 }]
   )
   const [remarks, setRemarks] = useState(quotation?.remarks || "")
+  const [includeVat, setIncludeVat] = useState(quotation ? quotation.include_vat : true)
 
   const addItem = () => {
     setItems([...items, { id: Math.random().toString(36).substr(2, 9), description: "", price: 0 }])
@@ -46,7 +47,7 @@ export default function QuotationForm({ opportunity, quotation, onClose }: Quota
   }
 
   const sub_total = items.reduce((sum, item) => sum + (item.price || 0), 0)
-  const vat = sub_total * 0.07
+  const vat = includeVat ? sub_total * 0.07 : 0
   const grand_total = sub_total + vat
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -61,6 +62,7 @@ export default function QuotationForm({ opportunity, quotation, onClose }: Quota
         sub_total,
         vat,
         grand_total,
+        include_vat: includeVat,
         remarks,
       })
     } else {
@@ -73,6 +75,7 @@ export default function QuotationForm({ opportunity, quotation, onClose }: Quota
         sub_total,
         vat,
         grand_total,
+        include_vat: includeVat,
         remarks,
         revision,
         status: "draft",
@@ -141,16 +144,31 @@ export default function QuotationForm({ opportunity, quotation, onClose }: Quota
         </div>
       </div>
 
-      <div>
-        <Label htmlFor="remarks">Remark (หมายเหตุ)</Label>
-        <Textarea
-          id="remarks"
-          placeholder="เพิ่มหมายเหตุ (จะแสดงใต้รายการบริการ)..."
-          value={remarks}
-          onChange={(e) => setRemarks(e.target.value)}
-          className="mt-2"
-          rows={3}
-        />
+      <div className="space-y-4">
+        <div className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            id="include_vat"
+            checked={includeVat}
+            onChange={(e) => setIncludeVat(e.target.checked)}
+            className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
+          />
+          <Label htmlFor="include_vat" className="text-sm font-medium leading-none cursor-pointer">
+            คำนวณ VAT 7%
+          </Label>
+        </div>
+
+        <div>
+          <Label htmlFor="remarks">Remark (หมายเหตุ)</Label>
+          <Textarea
+            id="remarks"
+            placeholder="เพิ่มหมายเหตุ (จะแสดงใต้รายการบริการ)..."
+            value={remarks}
+            onChange={(e) => setRemarks(e.target.value)}
+            className="mt-2"
+            rows={3}
+          />
+        </div>
       </div>
 
       {/* Summary */}
@@ -159,10 +177,12 @@ export default function QuotationForm({ opportunity, quotation, onClose }: Quota
           <span>Sub Total</span>
           <span>{sub_total.toLocaleString("en-US", { minimumFractionDigits: 2 })}</span>
         </div>
-        <div className="flex justify-between text-sm">
-          <span>VAT 7%</span>
-          <span>{vat.toLocaleString("en-US", { minimumFractionDigits: 2 })}</span>
-        </div>
+        {includeVat && (
+          <div className="flex justify-between text-sm">
+            <span>VAT 7%</span>
+            <span>{vat.toLocaleString("en-US", { minimumFractionDigits: 2 })}</span>
+          </div>
+        )}
         <div className="flex justify-between font-semibold border-t pt-2">
           <span>Grand Total</span>
           <span>{grand_total.toLocaleString("en-US", { minimumFractionDigits: 2 })}</span>
