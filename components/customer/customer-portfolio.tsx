@@ -150,7 +150,7 @@ export default function CustomerPortfolio({ customer }: CustomerPortfolioProps) 
                                                                                 const isSubItem = trimmedLine.startsWith('-');
                                                                                 if (isSubItem) {
                                                                                     return (
-                                                                                        <div key={i} className="flex gap-1.5 pl-3 mt-0.5 text-muted-foreground/80">
+                                                                                        <div key={i} className="flex gap-1.5 pl-3 mt-0.5 text-foreground/80">
                                                                                             <span className="shrink-0">-</span>
                                                                                             <span>{trimmedLine.substring(1).trim()}</span>
                                                                                         </div>

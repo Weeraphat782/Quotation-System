@@ -172,7 +172,7 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
                             const isSubItem = trimmedLine.startsWith('-');
                             if (isSubItem) {
                               return (
-                                <div key={i} className="flex gap-2 pl-4 mt-0.5 text-gray-700">
+                                <div key={i} className="flex gap-2 pl-4 mt-0.5">
                                   <span className="shrink-0">-</span>
                                   <span>{trimmedLine.substring(1).trim()}</span>
                                 </div>
@@ -197,7 +197,7 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
               {quotation.remarks && (
                 <div className="px-2">
                   <p className="font-bold underline mb-1 italic">Remark:</p>
-                  <p className="whitespace-pre-line leading-relaxed text-gray-700">{quotation.remarks}</p>
+                  <p className="whitespace-pre-line leading-relaxed">{quotation.remarks}</p>
                 </div>
               )}
             </div>
