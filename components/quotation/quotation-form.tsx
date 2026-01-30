@@ -115,7 +115,7 @@ export default function QuotationForm({ opportunity, quotation, onClose }: Quota
             <div key={item.id} className="flex gap-3 items-start border-b pb-4 sm:pb-3 last:border-0 last:pb-0">
               <div className="flex-1">
                 <Textarea
-                  placeholder={`รายการที่ ${index + 1}`}
+                  placeholder={`รายการที่ ${index + 1} (กด Enter ขึ้นบรรทัดใหม่, - นำหน้าเพื่อย่อยบรรทัด)`}
                   value={item.description}
                   onChange={(e) => updateItem(item.id, "description", e.target.value)}
                   rows={2}

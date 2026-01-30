@@ -144,7 +144,21 @@ export default function CustomerPortfolio({ customer }: CustomerPortfolioProps) 
                                                             <div className="divide-y divide-muted-foreground/5">
                                                                 {q.items?.map((item, idx) => (
                                                                     <div key={idx} className="flex justify-between gap-4 px-3 py-2">
-                                                                        <p className="flex-1 break-words whitespace-pre-line text-xs">{item.description}</p>
+                                                                        <div className="flex-1 break-words whitespace-pre-line text-xs">
+                                                                            {item.description.split('\n').map((line, i) => {
+                                                                                const trimmedLine = line.trim();
+                                                                                const isSubItem = trimmedLine.startsWith('-');
+                                                                                if (isSubItem) {
+                                                                                    return (
+                                                                                        <div key={i} className="flex gap-1.5 pl-3 mt-0.5 text-muted-foreground/80">
+                                                                                            <span className="shrink-0">-</span>
+                                                                                            <span>{trimmedLine.substring(1).trim()}</span>
+                                                                                        </div>
+                                                                                    );
+                                                                                }
+                                                                                return <div key={i}>{line}</div>;
+                                                                            })}
+                                                                        </div>
                                                                         <span className="font-mono text-xs whitespace-nowrap">{item.price.toLocaleString("en-US", { minimumFractionDigits: 2 })}</span>
                                                                     </div>
                                                                 ))}

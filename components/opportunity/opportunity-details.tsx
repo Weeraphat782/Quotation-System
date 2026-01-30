@@ -150,9 +150,21 @@ export default function OpportunityDetails({ opportunity }: OpportunityDetailsPr
                                                     <div className="divide-y divide-muted-foreground/5">
                                                         {q.items?.map((item, idx) => (
                                                             <div key={idx} className="flex justify-between gap-4 px-4 py-3 hover:bg-muted/5 transition-colors">
-                                                                <p className="font-medium text-sm leading-relaxed flex-1 break-words whitespace-pre-line">
-                                                                    {item.description}
-                                                                </p>
+                                                                <div className="font-medium text-sm leading-relaxed flex-1 break-words whitespace-pre-line">
+                                                                    {item.description.split('\n').map((line, i) => {
+                                                                        const trimmedLine = line.trim();
+                                                                        const isSubItem = trimmedLine.startsWith('-');
+                                                                        if (isSubItem) {
+                                                                            return (
+                                                                                <div key={i} className="flex gap-2 pl-4 mt-0.5 text-muted-foreground/80">
+                                                                                    <span className="shrink-0">-</span>
+                                                                                    <span>{trimmedLine.substring(1).trim()}</span>
+                                                                                </div>
+                                                                            );
+                                                                        }
+                                                                        return <div key={i}>{line}</div>;
+                                                                    })}
+                                                                </div>
                                                                 <span className="font-mono text-sm whitespace-nowrap pt-0.5">
                                                                     {item.price.toLocaleString("en-US", { minimumFractionDigits: 2 })}
                                                                 </span>

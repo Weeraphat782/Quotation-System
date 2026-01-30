@@ -165,8 +165,22 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
                   <tr key={item.id}>
                     <td className="py-2 px-2 align-top">
                       <div className="flex gap-3">
-                        <span className="mt-1 text-[10px]">●</span>
-                        <span className="leading-relaxed">{item.description}</span>
+                        <span className="mt-1 text-[10px] shrink-0">●</span>
+                        <div className="leading-relaxed whitespace-pre-line flex-1">
+                          {item.description.split('\n').map((line, i) => {
+                            const trimmedLine = line.trim();
+                            const isSubItem = trimmedLine.startsWith('-');
+                            if (isSubItem) {
+                              return (
+                                <div key={i} className="flex gap-2 pl-4 mt-0.5 text-gray-700">
+                                  <span className="shrink-0">-</span>
+                                  <span>{trimmedLine.substring(1).trim()}</span>
+                                </div>
+                              );
+                            }
+                            return <div key={i}>{line}</div>;
+                          })}
+                        </div>
                       </div>
                     </td>
                     <td className="text-right py-2 px-2 align-top font-mono">
