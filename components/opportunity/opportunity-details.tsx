@@ -119,7 +119,7 @@ export default function OpportunityDetails({ opportunity }: OpportunityDetailsPr
                 ) : (
                     <div className="grid gap-6">
                         {opQuotations
-                            .sort((a, b) => b.quotation_number.localeCompare(a.quotation_number))
+                            .sort((a, b) => a.quotation_number.localeCompare(b.quotation_number))
                             .map((q) => (
                                 <Card key={q.id} className="overflow-hidden border-2 hover:border-primary/20 transition-colors">
                                     <div className="bg-muted/30 px-6 py-4 flex flex-wrap items-center justify-between gap-4 border-b">

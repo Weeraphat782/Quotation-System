@@ -62,7 +62,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       const { data: companies } = await supabase.from("companies").select("*")
       const { data: customers } = await supabase.from("customers").select("*")
       const { data: opportunities } = await supabase.from("opportunities").select("*")
-      const { data: quotations } = await supabase.from("quotations").select("*, items:quotation_items(*)")
+      const { data: quotations } = await supabase.from("quotations").select("*, items:quotation_items(*)").order("quotation_number", { ascending: true })
 
       setState((prev) => ({
         ...prev,
