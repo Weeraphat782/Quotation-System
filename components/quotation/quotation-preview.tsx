@@ -169,6 +169,9 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
                         <div className="leading-relaxed whitespace-pre-line flex-1">
                           {item.description.split('\n').map((line, i) => {
                             const trimmedLine = line.trim();
+                            if (trimmedLine === '') {
+                              return <div key={i} className="h-[1em]" />;
+                            }
                             const isSubItem = trimmedLine.startsWith('-');
                             if (isSubItem) {
                               return (
