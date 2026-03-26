@@ -225,7 +225,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
       const itemsToInsert = items.map(item => ({
         quotation_id: newQuotation.id,
         description: item.description,
-        price: item.price
+        price: item.price,
+        page: item.page || 1,
+        hide_price: item.hide_price || false
       }))
       const { error: itemsError } = await supabase.from("quotation_items").insert(itemsToInsert)
       if (itemsError) console.error("Error inserting quotation items:", itemsError)
@@ -257,7 +259,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
       const itemsToInsert = items.map(item => ({
         quotation_id: id,
         description: item.description,
-        price: item.price
+        price: item.price,
+        page: item.page || 1,
+        hide_price: item.hide_price || false
       }))
 
       const { error: itemsError } = await supabase.from("quotation_items").insert(itemsToInsert)

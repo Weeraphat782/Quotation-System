@@ -81,8 +81,14 @@ CREATE TABLE IF NOT EXISTS quotation_items (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     quotation_id UUID REFERENCES quotations(id) ON DELETE CASCADE,
     description TEXT NOT NULL,
-    price NUMERIC(15, 2) NOT NULL DEFAULT 0
+    price NUMERIC(15, 2) NOT NULL DEFAULT 0,
+    page INTEGER DEFAULT 1,
+    hide_price BOOLEAN DEFAULT FALSE
 );
+
+-- Add columns if they do not exist (for existing databases)
+ALTER TABLE quotation_items ADD COLUMN IF NOT EXISTS page INTEGER DEFAULT 1;
+ALTER TABLE quotation_items ADD COLUMN IF NOT EXISTS hide_price BOOLEAN DEFAULT FALSE;
 
 -- Initial Admin User (Default password: password123)
 -- Note: In production, password should be hashed.

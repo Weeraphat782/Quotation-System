@@ -45,6 +45,8 @@ export interface QuotationItem {
   quotation_id?: string
   description: string
   price: number
+  page?: number // 1 = page 1 (default), 2 = page 2
+  hide_price?: boolean // true = do not display price in preview
 }
 
 export interface Quotation {

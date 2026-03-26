@@ -33,7 +33,7 @@ export default function QuotationForm({ opportunity, quotation, onClose }: Quota
   const [includeVat, setIncludeVat] = useState(quotation ? quotation.include_vat : true)
 
   const addItem = () => {
-    setItems([...items, { id: Math.random().toString(36).substr(2, 9), description: "", price: 0 }])
+    setItems([...items, { id: Math.random().toString(36).substr(2, 9), description: "", price: 0, page: 1, hide_price: false }])
   }
 
   const removeItem = (id: string) => {
@@ -42,7 +42,7 @@ export default function QuotationForm({ opportunity, quotation, onClose }: Quota
     }
   }
 
-  const updateItem = (id: string, field: "description" | "price", value: string | number) => {
+  const updateItem = (id: string, field: "description" | "price" | "page" | "hide_price", value: string | number | boolean) => {
     setItems(items.map((item) => (item.id === id ? { ...item, [field]: value } : item)))
   }
 
@@ -86,6 +86,9 @@ export default function QuotationForm({ opportunity, quotation, onClose }: Quota
     onClose()
   }
 
+  // Check if any item uses page 2
+  const hasPage2 = items.some(item => (item.page || 1) === 2)
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="flex justify-between items-center">
@@ -121,14 +124,39 @@ export default function QuotationForm({ opportunity, quotation, onClose }: Quota
                   rows={2}
                   className="resize-none"
                 />
+                <button
+                  type="button"
+                  onClick={() => updateItem(item.id, "page", (item.page || 1) === 1 ? 2 : 1)}
+                  className={`mt-1.5 text-xs px-2 py-0.5 rounded-full font-medium transition-colors ${
+                    (item.page || 1) === 1
+                      ? "bg-blue-100 text-blue-700 hover:bg-blue-200"
+                      : "bg-orange-100 text-orange-700 hover:bg-orange-200"
+                  }`}
+                >
+                  📄 หน้า {item.page || 1}
+                </button>
               </div>
               <div className="w-32">
-                <Input
-                  type="number"
-                  placeholder="ราคา"
-                  value={item.price || ""}
-                  onChange={(e) => updateItem(item.id, "price", Number.parseFloat(e.target.value) || 0)}
-                />
+                <div className="flex flex-col gap-2">
+                  <Input
+                    type="number"
+                    placeholder="ราคา"
+                    value={item.price || ""}
+                    onChange={(e) => updateItem(item.id, "price", Number.parseFloat(e.target.value) || 0)}
+                  />
+                  <div className="flex items-center space-x-1 border rounded p-1.5 bg-background">
+                    <input
+                      type="checkbox"
+                      id={`hide_price_${item.id}`}
+                      checked={item.hide_price || false}
+                      onChange={(e) => updateItem(item.id, "hide_price", e.target.checked)}
+                      className="w-3.5 h-3.5 rounded border-gray-300 text-primary focus:ring-primary"
+                    />
+                    <Label htmlFor={`hide_price_${item.id}`} className="text-xs font-medium cursor-pointer text-muted-foreground">
+                      ซ่อนราคา
+                    </Label>
+                  </div>
+                </div>
               </div>
               <Button
                 type="button"
