@@ -31,6 +31,11 @@ export default function QuotationForm({ opportunity, quotation, onClose }: Quota
   )
   const [remarks, setRemarks] = useState(quotation?.remarks || "")
   const [includeVat, setIncludeVat] = useState(quotation ? quotation.include_vat : true)
+  const [quotationDate, setQuotationDate] = useState<string>(
+    quotation?.quotation_date 
+      ? new Date(quotation.quotation_date).toISOString().split('T')[0] 
+      : new Date().toISOString().split('T')[0]
+  )
 
   const addItem = () => {
     setItems([...items, { id: Math.random().toString(36).substr(2, 9), description: "", price: 0, page: 1, hide_price: false }])
@@ -64,6 +69,7 @@ export default function QuotationForm({ opportunity, quotation, onClose }: Quota
         grand_total,
         include_vat: includeVat,
         remarks,
+        quotation_date: quotationDate,
       })
     } else {
       // Create mode
@@ -77,6 +83,7 @@ export default function QuotationForm({ opportunity, quotation, onClose }: Quota
         grand_total,
         include_vat: includeVat,
         remarks,
+        quotation_date: quotationDate,
         revision,
         status: "draft",
         created_by: currentUser?.id || "",
@@ -91,15 +98,24 @@ export default function QuotationForm({ opportunity, quotation, onClose }: Quota
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         <div>
           <Label className="text-sm text-muted-foreground">Revision</Label>
           <p className="font-medium">Rev. {revision}</p>
         </div>
+        <div>
+          <Label className="text-sm text-muted-foreground">วันที่อ้างอิง</Label>
+          <Input 
+            type="date" 
+            value={quotationDate}
+            onChange={(e) => setQuotationDate(e.target.value)}
+            className="mt-1"
+          />
+        </div>
         {quotation && (
           <div className="text-right">
-            <Label className="text-sm text-muted-foreground">เลขที่ Quotation</Label>
-            <p className="font-mono font-medium">{quotation.quotation_number}</p>
+             <Label className="text-sm text-muted-foreground">เลขที่ Quotation</Label>
+             <p className="font-mono font-medium mt-1">{quotation.quotation_number}</p>
           </div>
         )}
       </div>

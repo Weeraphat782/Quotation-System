@@ -81,7 +81,7 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
         </div>
         <div className="text-right">
           <span className="font-bold">Date: </span>
-          <span style={{ fontSize: '14pt' }}>{formatDate(quotation.created_at)}</span>
+          <span style={{ fontSize: '14pt' }}>{formatDate(quotation.quotation_date || quotation.created_at)}</span>
         </div>
       </div>
 
@@ -284,7 +284,7 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
             </div>
             <div className="text-right">
               <span className="font-bold">Date: </span>
-              <span style={{ fontSize: '14pt' }}>{formatDate(quotation.created_at)}</span>
+              <span style={{ fontSize: '14pt' }}>{formatDate(quotation.quotation_date || quotation.created_at)}</span>
             </div>
           </div>
         )}

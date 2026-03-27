@@ -69,12 +69,14 @@ CREATE TABLE IF NOT EXISTS quotations (
     revision INTEGER DEFAULT 1,
     status TEXT CHECK (status IN ('draft', 'sent', 'accepted', 'rejected')) DEFAULT 'draft',
     remarks TEXT,
+    quotation_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     created_by UUID REFERENCES employees(id)
 );
 
--- Add remarks column if it doesn't exist (for existing databases)
+-- Add missing columns if they don't exist (for existing databases)
 ALTER TABLE quotations ADD COLUMN IF NOT EXISTS remarks TEXT;
+ALTER TABLE quotations ADD COLUMN IF NOT EXISTS quotation_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP;
 
 -- 6. Quotation Items Table
 CREATE TABLE IF NOT EXISTS quotation_items (

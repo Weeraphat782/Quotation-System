@@ -63,6 +63,7 @@ export interface Quotation {
   status: "draft" | "sent" | "accepted" | "rejected"
   include_vat: boolean
   remarks?: string
+  quotation_date?: string | Date
   created_at: string | Date
   created_by: string
 }
