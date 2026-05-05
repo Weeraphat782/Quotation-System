@@ -213,10 +213,10 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
       <div className="flex justify-between items-start mt-8 text-base">
         <div className="text-center w-72 relative">
           <p className="mb-2">Yours sincerely,</p>
-          <div className="h-10 flex items-center justify-center">
+          <div className="h-12 flex items-center justify-center">
             {company.signature_name && (
               <span
-                className="text-3xl italic text-blue-900 opacity-80"
+                className="text-5xl italic text-blue-900"
                 style={{
                   fontFamily: "'Freestyle Script', 'Brush Script MT', 'Palace Script MT', cursive",
                   transform: "rotate(-2deg)",
@@ -233,7 +233,7 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
         </div>
         <div className="text-center w-72">
           <p className="mb-2">Quotation Accepted By:</p>
-          <div className="h-10"></div>
+          <div className="h-12"></div>
           <div className="border-b border-black w-full mb-1"></div>
           <p className="font-bold uppercase text-[12px]">{customer.name}</p>
           <p className="italic text-[12px] mt-1">Authorized Signature / Date</p>
@@ -243,12 +243,11 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
   )
 
   const renderPageFooter = (pageNum: number) => (
-    <div className="mt-auto pt-4 border-t border-gray-100 text-center text-[10px] text-black">
-      <p className="mt-0.5">{company.address}</p>
-      <p className="mt-0.5 font-mono text-[9px]">Tel: {company.phone} | Email: {company.email}</p>
-      {totalPages > 1 && (
-        <p className="mt-1 text-[9px] text-gray-500">Page {pageNum} of {totalPages}</p>
-      )}
+    <div className="mt-auto pt-8 border-t border-gray-100 text-center text-[10px] text-black">
+      <p className="mt-0.5 font-mono text-[9px]">
+        {company.address}
+        {totalPages > 1 && <span className="text-gray-500"> — Page {pageNum} of {totalPages}</span>}
+      </p>
     </div>
   )
 
@@ -269,8 +268,20 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
           breakAfter: isLastPage ? 'auto' : 'page',
         }}
       >
-        {/* Header - always shown */}
-        {renderHeader()}
+        {/* Header - full on page 1, logo-only on page 2 */}
+        {pageNum === 1 && renderHeader()}
+        {pageNum !== 1 && company.logo_url && (
+          <div className="relative mb-6 min-h-[60px]">
+            <div className="absolute top-0 right-[-14mm] w-28 h-28 flex justify-end items-start pointer-events-none">
+              <img
+                src={company.logo_url}
+                alt="Company Logo"
+                className="max-w-full max-h-full object-contain"
+                style={{ display: 'block' }}
+              />
+            </div>
+          </div>
+        )}
 
         {/* Quotation info - only on page 1 */}
         {pageNum === 1 && renderQuotationInfo()}
