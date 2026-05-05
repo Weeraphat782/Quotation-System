@@ -210,7 +210,7 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
       </div>
 
       {/* Signatures */}
-      <div className="flex justify-between items-start mt-8 text-base">
+      <div className="flex justify-between items-start mt-8" style={{ fontSize: '13pt' }}>
         <div className="text-center w-72 relative">
           <p className="mb-2">Yours sincerely,</p>
           <div className="h-12 flex items-center justify-center">
@@ -243,11 +243,11 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
   )
 
   const renderPageFooter = (pageNum: number) => (
-    <div className="mt-auto pt-8 border-t border-gray-100 text-center text-[10px] text-black">
-      <p className="mt-0.5 font-mono text-[9px]">
-        {company.address}
-        {totalPages > 1 && <span className="text-gray-500"> — Page {pageNum} of {totalPages}</span>}
-      </p>
+    <div className="mt-auto pt-8 border-t border-gray-100 text-[10px] text-black">
+      <div className="flex justify-between items-center mt-0.5">
+        <p className="font-mono text-[9px]">{company.address}</p>
+        {totalPages > 1 && <p className="text-[9px] text-gray-500 shrink-0 ml-4">Page {pageNum} of {totalPages}</p>}
+      </div>
     </div>
   )
 
@@ -271,7 +271,7 @@ export default function QuotationPreview({ quotation, onClose }: QuotationPrevie
         {/* Header - full on page 1, logo-only on page 2 */}
         {pageNum === 1 && renderHeader()}
         {pageNum !== 1 && company.logo_url && (
-          <div className="relative mb-6 min-h-[60px]">
+          <div className="relative mb-10 min-h-[100px]">
             <div className="absolute top-0 right-[-14mm] w-28 h-28 flex justify-end items-start pointer-events-none">
               <img
                 src={company.logo_url}
